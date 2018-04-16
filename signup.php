@@ -1,14 +1,12 @@
 
 <?php
-session_start();
-$con=mysqli_connect('localhost','root');
-if($con){
-	echo "connection successful";
-}else{
-	echo "no connection";
-}
+$servername = "localhost";
+$username = "root";
+$password = "password";
+$dbname = "swl";
 
-mysqli_select_db($con,'swl');
+// Create connection
+$conn = new mysqli($servername, $username, $password,$dbname);
 
 $fname=$_POST['fname'];
 $lname=$_POST['lname'];
@@ -16,17 +14,17 @@ $uname=$_POST['uname'];
 $email=$_POST['email'];
 $pasw=$_POST['psw'];
 
-$q="select * from user where username='$uname' && password='$pasw'";
-$result= mysqli_query($con,$q);
- 
-$num = mysqli_num_rows($result);
-
-if($num==1){
-	echo "duplicate data";
-}else{
-
-	$qy= "insert into user(fname,lname,username,email,password) values('$fname','$lname','$uname','$email','$pasw')";
-	mysqli_query($con,$qy);
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
+$sql = "insert into user(fname,lname,username,email,password) values('$fname','$lname','$uname','$email','$pasw')";
+
+if (mysqli_query($conn, $sql)) {
+    echo "done successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+}
+
+mysqli_close($conn);
 ?>
